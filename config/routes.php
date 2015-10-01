@@ -1,0 +1,4 @@
+<?php
+use routeador\Route;
+
+
