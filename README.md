@@ -10,17 +10,27 @@ To include any helpers go to inc/helpers.
 
 To create them go to app/controllers and create an abstract class with static methods.
 
-To include views you need to declare ```php $args = func_get_args() ``` and ```php require __DIR__.DS.'..'.DS.'views/layouts/app.php' ``` in your action controller.
+To include views you need to declare an args variable and include the view layout in your action controller: 
+```php 
+$args = func_get_args();
+require __DIR__.DS.'..'.DS.'views/layouts/app.php' ;
+``` 
 
 Naming conventions:
 You have to name the controller starting with the name of the route resource plural and controller camelcase, for example: if you create a resource called user, then your controller should be called UsersController.
 
 ### Controller Helpers
 
-To get values from url and from post request use the ```php params($param) ``` function with the name as parameter, if you send more than one parameter, you need to send as the function parameter an array with the names of parameter, it will return an associative array with the name of parameter and value.
+To get values from url and from post request use the params function with the name as parameter, if you send more than one parameter, you need to send as the function parameter an array with the names of parameter, it will return an associative array with the name of parameter and value.
+```php 
+params($param); 
+```
 [NOTE: if you send an id in url it will return the id as integer for security purposes and to be able to send directly to save in model because strict prepared statements params.]
 
-To redirect use the function ```php redirect_to($location) ```
+To redirect use the function redirect to function. 
+```php 
+redirect_to($location); 
+```
 
 # Mvceador Views
 
@@ -208,3 +218,9 @@ $db = MySQLDatabase::getInstance();
 $db->query($sql);
 ```
 [Dangerous: don't use if you need sanitazation.]
+
+# Mvceador Core Components
+
+For Models [Mappeador](https://github.com/darkdevilish/mappeador).
+For Routing [Routeador](https://github.com/darkdevilish/routeador).
+
