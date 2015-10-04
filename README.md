@@ -137,13 +137,13 @@ Save function it will return true if saved:
 ```php
 $john = new User();
 $john->name = "John";
-$john->save();
+$john->save(); /* or */ $john->create();
 ```
 
 Save function at instantiation with array params:
 ```php
 $john = new User(array( 'name' => 'John' ));
-$john->save();
+$john->save(); /* or */ $john->create();
 ```
 
 Find all function returns an object array:
@@ -178,11 +178,13 @@ User::count_all();
 ```
 
 Update(first you need to find a record, it will return true if updated):
+
 ```php
 $user = User::find_by_id(1);
 $user->name = "John";
-$user->update();
+$user->update(); /* or */ $john->save();
 ```
+
 Delete(you need to find record first also, and returns true if deleted):
 ```php
 $user = User::find_by_id(1);
