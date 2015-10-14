@@ -4,12 +4,10 @@ use routeador\Route;
 function params($param) {
 	if(is_array($param)) {
 		$params = array();
-		if(isset($_POST)) {
-			foreach($_POST as $parameter => $val) {
-				foreach($param as $permit) {
-					if($permit == $parameter) {
-						$params[$permit] = $val;
-					}
+		foreach($_POST as $parameter => $val) {
+			foreach($param as $permit) {
+				if($permit == $parameter) {
+					$params[$permit] = $val;
 				}
 			}
 		}
