@@ -221,9 +221,148 @@ $db->query($sql);
 ```
 [Dangerous: don't use if you need sanitazation.]
 
+# Mvceador Models Validations
+
+Validations will happen when creating and updating an object with only the save() function, if properties don't pass validations it will add corresponding error message to the Validator class error array and then that array it will be store in session which you will be able to retrieve calling the error method to models.
+
+## Validate methods
+
+You have to declared a protected static variable in your models and pass an associative array with validations methods names and options.
+
+### Validate Presences
+
+It validates that the specified attributes are not empty, whitespace will be trim, default message (specified attribute capitalize can't be blank).
+
+```php
+use mappeador\Mapper;
+
+class User extends Mapper {
+  protected static $table_name = 'users';
+
+  protected static $validate = array(
+    'name' => array('presences')
+  );
+}
+```
+### Validate Lenghts
+
+It validates lenghts of attributes values, the default error message depends on the type of length validation being performed, there are 3 options, max, min and exact. Possible default messages: name of input is too short (number characters minimum), name of input is too long (number characters maximum), name of input does not match number characters.
+
+```php
+  use mappeador\Mapper;
+
+  class User extends Mapper {
+    protected static $table_name = 'users';
+
+    protected static $validate = array(
+      'name' => array(array( 'lengths' => array('min' => 3, 'min' => 1) ))
+      'last_name' => array(array( 'lengths' => array('exact' => 10) ))
+    );
+  }
+```
+
+[NOTE: when calling this method you need to pass associative array with name of method as key and associative array with options as value.]
+
+### Validate Email
+
+It validates that email address is valid, default message email address (email) is invalid.
+
+```php
+  use mappeador\Mapper;
+
+  class User extends Mapper {
+    protected static $table_name = 'users';
+
+    protected static $validate = array(
+      'email' => array('email')
+    );
+  } 
+```
+
+### Validate Uniqueness
+
+It validates that the attribute is unique right before the object gets created, default error message, attribute has already been taken.
+
+```php
+  use mappeador\Mapper;
+
+  class User extends Mapper {
+    protected static $table_name = 'users';
+
+    protected static $validate = array(
+      'email' => array('uniqueness')
+    );
+  }
+```
+### Validate Confirmation
+
+It validates when there are two fields that should receive the same content, you have to send a post variable with the name of attribute-confirmation, the default message, attribute doesn' match confirmation, if confirmation is empty the error would be property confirmation can't be blank.
+
+```php
+  use mappeador\Mapper;
+
+  class User extends Mapper {
+    protected static $table_name = 'users';
+
+    protected static $validate = array(
+      'email' => array('confirmation')
+    );
+  }
+```
+
+### Custom Validations
+
+## Validate with method
+
+```php
+  use mappeador\Mapper;
+  use validator\Validator;
+
+  class User extends Mapper {
+    protected static $table_name = 'users';
+
+    protected static $validate_with = array('test');
+
+    protected static function test() {
+      $error = array('test' => 'some custom message');
+      Validator::add_error($error);
+    }
+  }
+```
+
+If you want to specified that you only want the validation method being called before creating the object use methodName[:create] or before updating the object use methodName[:update].
+
+### Get Errors
+
+To get the errors you just need to call the errors() method on the corresponding model, if the session errors is set it will return an associative array with errors and clear error from session at the end of the method, example:
+
+```php
+foreach(User::errors() as $name => $msg) {
+  echo $msg;
+}
+
+//if you want one specific error
+User::errors()['name'];
+```
+
+[NOTE: to add custom errors with the Validator class you need to use the namespace validator\Validator in your models.]
+
+# Custom messages with the notice helper
+
+It will store a custom message in session when requested and it will cleared from session after request.
+
+Usage:
+```php
+notice($msg);
+
+//to get the message 
+notice();
+```
+
 # Mvceador Core Components
 
 For Models [Mappeador](https://github.com/darkdevilish/mappeador).
 
 For Routing [Routeador](https://github.com/darkdevilish/routeador).
 
+For Validations [Validator](https://github.com/darkdevilish/validator).
