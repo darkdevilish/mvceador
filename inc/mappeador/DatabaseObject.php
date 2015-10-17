@@ -4,6 +4,24 @@ use mappeador\MySQLDatabase;
 
 abstract class DatabaseObject {
 
+  static function errors() {
+    if ( isset($_SESSION['errors']) ) {
+      $errors = $_SESSION['errors'];
+
+      // clear message after use
+      $_SESSION['errors'] = null;
+
+      return $errors;
+    }
+  }
+
+  static function old_input() {
+    if(isset($_SESSION['old_input'])) {
+      $old_input = $_SESSION['old_input'];
+      return $old_input;
+    }
+  }
+
   static function find_all($orderBy=NULL) {
     $sql = "SELECT * FROM " . static::$table_name;
     if(!empty($orderBy)){
@@ -96,6 +114,14 @@ abstract class DatabaseObject {
       if(is_string($param)){ $params_type .= "s"; }
     }
     return $params_type;
+  }
+
+  protected function uniqueness($property) {
+    $param = array($this->{$property});
+    $sql = "SELECT id FROM ".static::$table_name;
+    $sql .= " WHERE {$property} = ? LIMIT 1";
+    $result_array = static::find_by_sql($sql, $param);
+    return !empty($result_array) ? true : false;
   }
 
   private function has_attribute($attribute) {
